@@ -1,0 +1,71 @@
+= From workstation to server
+
+For many people term server is some machine which run on server machine or even on some server farms.
+This document helps users to configure they workstation computer to act like a one - a computer booting into text mode UI with only CLI to setup everything.
+
+== Prerequisities
+
+* Laptop or PC
+* Fedora workstation OS installed
+* Willing to do learn new things
+* Installed apache-server and ssh-server
+
+== 1. Automatically start services on start
+
+With server, a computer which provides a services, we need to manage its services somehow. Fedora uses systemd for that and with this daemon we have capability to eaasily manage them.
+
+=== 1.1. Automatically start Apache on start
+
+To start Apache, the web server daemon, we have to have some data for it. Otherwise default site will be shown after connecting to web through web browser or some client application.
+
+To start
+----
+systemctl enable httpd --now
+----
+
+httpd service is running default on port 80
+
+
+=== 1.2. Automatically start Apache on start
+
+Servers usually need to be managed remotely. For that system administrators use ssh clients. In order to connect to out server remotely we would need to start sshd service on our server. We can do so with
+
+----
+systemctl enable sshd --now
+----
+
+sshd service is running default on port 22
+
+== 2. Booting only in text mode
+
+To boot system in text mode we need to, in systemd terminology, set text mode as a default runlevel – target. For persistent booting to text mode run:
+
+----
+systemctl set-default multi-user.target
+----
+
+To switch from GUI to text mode after you are already boot to GUI:
+
+----
+sudo systemctl isolate multi-user.target
+----
+
+== 3. Disabling uneeded services
+
+Computer which is running as a server has to provide its services to more than one user. Because of that we would like to save as many resources as we can. One of all the possible solutions is to disable unwanted services which may use server's resources.
+
+For example our workstation may have bluetooh enabled by default and we soule like to disable it. With systemd we can do that easily using commands:
+
+----
+systemctl disable bluetooth # for disabling on boot start
+systemctl stop bluetooth # for stopping service
+----
+
+== Additional resources
+
+For more information visit links down below:
+
+* link:https://en.wikipedia.org/wiki/Systemd[systemd]
+* link:https://en.wikipedia.org/wiki/Httpd[httpd]
+* link:https://en.wikipedia.org/wiki/Secure_Shell[ssh]
+
